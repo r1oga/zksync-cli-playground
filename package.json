@@ -1,0 +1,16 @@
+{
+  "name": "zksync-playground",
+  "version": "1.0.0",
+  "repository": "git@github.com:r1oga/zksync-playground.git",
+  "author": "r1oga <38692952+r1oga@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node-dev --poll src/index.ts"
+  },
+  "devDependencies": {
+    "ethers": "^5.6.4",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.4",
+    "zksync": "^0.12.1"
+  }
+}
