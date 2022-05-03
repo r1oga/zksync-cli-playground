@@ -1,20 +1,22 @@
 import * as zksync from 'zksync'
 import * as ethers from 'ethers'
 
-import { Provider } from './providers'
+class ZkSyncAccount {
+  providers: { zkSync: zksync.Provider, evm: ethers.ethers.providers.BaseProvider }
+  wallet: zksync.Wallet
 
-class Account {
-  provider
-
-  constructor(networkName: zksync.types.Network) {
-    this.provider = new Provider(networkName)
+  constructor(
+    networkName: zksync.types.Network,
+    { zkSync, evm }: { zkSync: zksync.Provider, evm: ethers.ethers.providers.BaseProvider }) {
+    this.providers = { zkSync, evm }
   }
+
 
   init = async (evmWallet: ethers.Signer) => {
-    const zkSyncProvider = await this.provider.zkSync()
-    await zksync.Wallet.fromEthSigner(
-      evmWallet, zkSyncProvider)
+    this.wallet = await zksync.Wallet.fromEthSigner(
+      evmWallet, this.providers.zkSync)
   }
+
 
   register = async (zksyncWallet: zksync.Wallet) => {
     console.log(`Registering the ${zksyncWallet.address()} account on zkSync`)
@@ -27,6 +29,37 @@ class Account {
     }
     console.log(`Account ${zksyncWallet.address()} registered`)
   }
+
+  deposit = async ({ token, amount }: { token: string, amount: string }) => {
+    const deposit = await this.wallet.depositToSyncFromEthereum({
+                                                                  depositTo: this.wallet.address(),
+                                                                  token,
+                                                                  amount: ethers.utils.parseEther(amount),
+                                                                })
+    try {
+      await deposit.awaitReceipt()
+    } catch (error) {
+      console.log('Error while awaiting confirmation from the zkSync operators.')
+      console.log(error)
+    }
+  }
+
+  transfer = async ({
+    to,
+    amount,
+    fee,
+    token,
+  }: { to: string, amount: string, fee: string, token: string }) => {
+    const closestPackableAmount = zksync.utils.closestPackableTransactionAmount(ethers.utils.parseEther(amount))
+    const closestPackableFee = zksync.utils.closestPackableTransactionFee(ethers.utils.parseEther(fee))
+
+    const tx = await this.wallet.syncTransfer({ to, token, amount: closestPackableAmount, fee: closestPackableFee })
+    const receipt = await tx.awaitReceipt()
+
+    console.log('Got transfer receipt.', receipt)
+  }
 }
 
-export { Account }
+export {
+  ZkSyncAccount,
+}

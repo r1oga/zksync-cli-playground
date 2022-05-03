@@ -23,7 +23,7 @@ function handleError() {
   }
 }
 
-class Provider {
+class Providers {
   constructor(private networkName: zksync.types.Network) {
   }
 
@@ -36,6 +36,12 @@ class Provider {
   async evm() {
     return ethers.getDefaultProvider(this.networkName)
   }
+
+  async get() {
+    const [zkSync, evm] = await Promise.all([this.zkSync(), this.evm()])
+    return { zkSync, evm }
+  }
+
 }
 
-export { Provider }
+export { Providers }

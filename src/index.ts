@@ -1,5 +1,13 @@
-type S = string
+import { ZkSyncAccount } from './account'
+import { Providers } from './providers'
 
-const t: S = 'test'
+const main = async () => {
+  const networkName = 'rinkeby'
+  const providers = await new Providers(networkName).get()
 
-console.log(t)
+  const zkSyncAccount = new ZkSyncAccount(networkName, providers)
+
+  console.log(zkSyncAccount)
+}
+
+main()
