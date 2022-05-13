@@ -5,15 +5,19 @@
   "author": "r1oga <38692952+r1oga@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "start:build": "tsc -w",
+    "start:build": "tsc -w -p tsconfig.build.json",
     "start:run": "nodemon dist/index.js",
     "start": "concurrently npm:start:*",
+    "test": "jest",
     "random": "node dist/scripts.js"
   },
   "devDependencies": {
+    "@types/jest": "^27.5.1",
     "@types/node": "^17.0.33",
     "concurrently": "^7.1.0",
+    "jest": "^28.1.0",
     "nodemon": "^2.0.16",
+    "ts-jest": "^28.0.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.4"
   },
