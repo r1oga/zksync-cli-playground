@@ -12,7 +12,8 @@ class ZkSyncAccount {
   }
 
 
-  init = async (evmWallet: ethers.Signer) => {
+  init = async (mnemonic: string) => {
+    const evmWallet = ethers.Wallet.fromMnemonic(mnemonic)
     this.wallet = await zksync.Wallet.fromEthSigner(
       evmWallet, this.providers.zkSync)
   }
