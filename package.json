@@ -7,14 +7,18 @@
   "scripts": {
     "start:build": "tsc -w",
     "start:run": "nodemon dist/index.js",
-    "start": "concurrently npm:start:*"
+    "start": "concurrently npm:start:*",
+    "random": "node dist/scripts.js"
   },
   "devDependencies": {
+    "@types/node": "^17.0.33",
     "concurrently": "^7.1.0",
-    "ethers": "^5.6.4",
     "nodemon": "^2.0.16",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.6.4",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "ethers": "^5.6.5",
     "zksync": "^0.12.1"
   }
 }
