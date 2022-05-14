@@ -9,7 +9,9 @@
     "start:run": "nodemon dist/index.js",
     "start": "concurrently npm:start:*",
     "test": "jest",
-    "random": "node dist/scripts.js"
+    "random": "node dist/scripts/create-random-wallet",
+    "deposit": "node dist/scripts/deposit",
+    "register": "node dist/scripts/register"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",

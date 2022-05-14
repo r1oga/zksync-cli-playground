@@ -1,13 +1,3 @@
-import { ZkSyncAccount } from './account'
-import { Providers } from './providers'
+import {ZkSyncAccount} from "./account";
 
-const main = async () => {
-  const networkName = 'rinkeby'
-  const providers = await new Providers(networkName).get()
-
-  const zkSyncAccount = new ZkSyncAccount(networkName, providers)
-
-  console.log(zkSyncAccount)
-}
-
-main()
+export const rinkeby = new ZkSyncAccount('rinkeby')
