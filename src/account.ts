@@ -1,5 +1,6 @@
-import * as zksync from 'zksync'
 import * as ethers from 'ethers'
+import * as zksync from 'zksync'
+
 import {Providers} from './providers'
 
 class ZkSyncAccount {
@@ -15,20 +16,23 @@ class ZkSyncAccount {
     const providers = await this.providers.get()
     const evmWallet = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${index}`).connect(providers.evm)
     this.wallet = await zksync.Wallet.fromEthSigner(evmWallet, providers.zkSync)
-    console.log(`Initialized zksync wallet ${this.wallet.address()} on ${this.wallet.provider.network}`)
   }
 
+  isEnoughFundedToRegister = async () => {
+    const fee = await this.wallet.provider.getTransactionFee({ ChangePubKey: 'ECDSA' }, this.wallet.address(), 'ETH')
+    const balance = await this.wallet.getBalance('ETH')
+
+    return balance.gt(fee.totalFee)
+  }
 
   register = async () => {
-    console.log(`Registering the ${this.wallet.address()} account on zkSync ${this.wallet.provider.network}`)
-
     if (!await this.wallet.isSigningKeySet()) {
       if (await this.wallet.getAccountId() === undefined) throw new Error('Unknown account')
 
       const changePubkey = await this.wallet.setSigningKey({ feeToken: 'ETH', ethAuthType: 'ECDSA' })
       await changePubkey.awaitReceipt()
     }
-    console.log(`Account ${this.wallet.address()} registered`)
+    console.log('Wallet already register')
   }
 
   deposit = async ({ token = 'ETH', amount }: { token?: string, amount: string }) => {
