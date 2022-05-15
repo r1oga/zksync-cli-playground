@@ -5,13 +5,10 @@
   "author": "r1oga <38692952+r1oga@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "start:build": "tsc -w -p tsconfig.build.json",
-    "start:run": "nodemon dist/src/index.js",
-    "start": "concurrently npm:start:*",
-    "test": "jest",
-    "random": "node dist/scripts/create-random-wallet",
-    "deposit": "node dist/scripts/deposit",
-    "register": "node dist/scripts/register"
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc -w -p tsconfig.build.json",
+    "start": "node dist/index",
+    "cli": "yarn build && yarn start"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
@@ -27,6 +24,7 @@
     "@types/inquirer": "^8.2.1",
     "ethers": "^5.6.5",
     "inquirer": "^8.2.4",
+    "ora": "^5.1.0",
     "zksync": "^0.12.1"
   }
 }

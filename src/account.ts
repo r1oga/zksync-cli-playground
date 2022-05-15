@@ -22,7 +22,7 @@ class ZkSyncAccount {
     const fee = await this.wallet.provider.getTransactionFee({ ChangePubKey: 'ECDSA' }, this.wallet.address(), 'ETH')
     const balance = await this.wallet.getBalance('ETH')
 
-    return balance.gt(fee.totalFee)
+    return { hasEnoughFundsToRegister: balance.gt(fee.totalFee), fee: fee.totalFee }
   }
 
   register = async () => {
@@ -31,8 +31,10 @@ class ZkSyncAccount {
 
       const changePubkey = await this.wallet.setSigningKey({ feeToken: 'ETH', ethAuthType: 'ECDSA' })
       await changePubkey.awaitReceipt()
+      console.log(`Account ${this.wallet.address()} registered`)
+    } else {
+      console.log('Wallet already registered')
     }
-    console.log('Wallet already register')
   }
 
   deposit = async ({ token = 'ETH', amount }: { token?: string, amount: string }) => {
@@ -43,6 +45,7 @@ class ZkSyncAccount {
     })
     try {
       await deposit.awaitReceipt()
+      console.log('Deposit completed')
     } catch (error) {
       console.log('Error while awaiting confirmation from the zkSync operators.')
       console.log(error)
