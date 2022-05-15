@@ -1,24 +1,22 @@
+import {ZkSyncAccount} from '../account'
+
 describe('Accounts', () => {
-    beforeEach(async () => {
-        await zksync.init(process.env.PRIVATE_KEY!)
+  const zksync = new ZkSyncAccount('rinkeby')
+
+  describe('init', () => {
+    it('initializes wallet', async () => {
+      await zksync.init({})
+      const ethSigner = await zksync.wallet.ethSigner()
+      console.log(ethSigner)
+      expect(zksync.wallet).toBeDefined()
+      expect(zksync.wallet.cachedAddress.toLowerCase()).toBe('0xa573e709580bcf734cf4e48d496231ca687e809b')
+      expect(zksync.wallet.provider.network).toBe('rinkeby')
+
+      expect(await zksync.wallet.ethSigner().provider).not.toBeNull()
 
     })
 
-    it('initializes providers', async () => {
-        expect(zksync.providers).toEqual(providers)
-    })
+  })
 
-    it('init an account on rinkeby', async () => {
-        expect(zksync.wallet).toBeDefined()
-        expect(zksync.wallet.cachedAddress).toBe('0x385a68360B74C70a43Cad647b59B4C9ba6eD8e7E')
-        expect(zksync.wallet.provider.network).toBe('rinkeby')
-        expect(await zksync.wallet.getAccountId()).toBe(1293371)
-    })
 
-    it.skip('deposits ETH from rinkeby to zksync', async () => {
-        const balanceBefore = await zksync.wallet.getBalance('ETH')
-        await zksync.deposit({ token: 'ETH', amount: '0.001' })
-        const balanceAfter = await zksync.wallet.getBalance('ETH')
-        expect(balanceBefore > balanceAfter).toBeTruthy()
-    })
 })

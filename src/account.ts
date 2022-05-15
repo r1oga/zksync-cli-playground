@@ -1,6 +1,6 @@
 import * as zksync from 'zksync'
 import * as ethers from 'ethers'
-import {Providers} from "./providers";
+import {Providers} from './providers'
 
 class ZkSyncAccount {
   providers: Providers
@@ -11,12 +11,11 @@ class ZkSyncAccount {
   }
 
 
-  init = async (mnemonic: string) => {
+  init = async ({ mnemonic = process.env.MNEMONIC!, index = 0 }: { mnemonic?: string, index?: number }) => {
     const providers = await this.providers.get()
-    const evmWallet = ethers.Wallet.fromMnemonic(mnemonic)
-    evmWallet.connect(providers.evm)
+    const evmWallet = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${index}`).connect(providers.evm)
     this.wallet = await zksync.Wallet.fromEthSigner(evmWallet, providers.zkSync)
-    console.log(`Initialized zksync wallet on ${this.wallet.provider.network}`)
+    console.log(`Initialized zksync wallet ${this.wallet.address()} on ${this.wallet.provider.network}`)
   }
 
 
